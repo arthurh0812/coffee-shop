@@ -14,30 +14,30 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ProductsClient is the client API for Products service.
+// ProductServiceClient is the client API for ProductService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ProductsClient interface {
-	GetAllProducts(ctx context.Context, in *QueryOptions, opts ...grpc.CallOption) (Products_GetAllProductsClient, error)
+type ProductServiceClient interface {
+	GetAllProducts(ctx context.Context, in *QueryOptions, opts ...grpc.CallOption) (ProductService_GetAllProductsClient, error)
 	GetProductByID(ctx context.Context, in *ProductID, opts ...grpc.CallOption) (*ProductResponse, error)
 	CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
 	UpdateProductByID(ctx context.Context, in *UpdateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
 }
 
-type productsClient struct {
+type productServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewProductsClient(cc grpc.ClientConnInterface) ProductsClient {
-	return &productsClient{cc}
+func NewProductServiceClient(cc grpc.ClientConnInterface) ProductServiceClient {
+	return &productServiceClient{cc}
 }
 
-func (c *productsClient) GetAllProducts(ctx context.Context, in *QueryOptions, opts ...grpc.CallOption) (Products_GetAllProductsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &Products_ServiceDesc.Streams[0], "/Products/GetAllProducts", opts...)
+func (c *productServiceClient) GetAllProducts(ctx context.Context, in *QueryOptions, opts ...grpc.CallOption) (ProductService_GetAllProductsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ProductService_ServiceDesc.Streams[0], "/ProductService/GetAllProducts", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &productsGetAllProductsClient{stream}
+	x := &productServiceGetAllProductsClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -47,16 +47,16 @@ func (c *productsClient) GetAllProducts(ctx context.Context, in *QueryOptions, o
 	return x, nil
 }
 
-type Products_GetAllProductsClient interface {
+type ProductService_GetAllProductsClient interface {
 	Recv() (*ProductResponse, error)
 	grpc.ClientStream
 }
 
-type productsGetAllProductsClient struct {
+type productServiceGetAllProductsClient struct {
 	grpc.ClientStream
 }
 
-func (x *productsGetAllProductsClient) Recv() (*ProductResponse, error) {
+func (x *productServiceGetAllProductsClient) Recv() (*ProductResponse, error) {
 	m := new(ProductResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -64,172 +64,172 @@ func (x *productsGetAllProductsClient) Recv() (*ProductResponse, error) {
 	return m, nil
 }
 
-func (c *productsClient) GetProductByID(ctx context.Context, in *ProductID, opts ...grpc.CallOption) (*ProductResponse, error) {
+func (c *productServiceClient) GetProductByID(ctx context.Context, in *ProductID, opts ...grpc.CallOption) (*ProductResponse, error) {
 	out := new(ProductResponse)
-	err := c.cc.Invoke(ctx, "/Products/GetProductByID", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ProductService/GetProductByID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *productsClient) CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
+func (c *productServiceClient) CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
 	out := new(ProductResponse)
-	err := c.cc.Invoke(ctx, "/Products/CreateProduct", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ProductService/CreateProduct", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *productsClient) UpdateProductByID(ctx context.Context, in *UpdateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
+func (c *productServiceClient) UpdateProductByID(ctx context.Context, in *UpdateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
 	out := new(ProductResponse)
-	err := c.cc.Invoke(ctx, "/Products/UpdateProductByID", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ProductService/UpdateProductByID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ProductsServer is the server API for Products service.
-// All implementations must embed UnimplementedProductsServer
+// ProductServiceServer is the server API for ProductService service.
+// All implementations must embed UnimplementedProductServiceServer
 // for forward compatibility
-type ProductsServer interface {
-	GetAllProducts(*QueryOptions, Products_GetAllProductsServer) error
+type ProductServiceServer interface {
+	GetAllProducts(*QueryOptions, ProductService_GetAllProductsServer) error
 	GetProductByID(context.Context, *ProductID) (*ProductResponse, error)
 	CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error)
 	UpdateProductByID(context.Context, *UpdateProductRequest) (*ProductResponse, error)
-	mustEmbedUnimplementedProductsServer()
+	mustEmbedUnimplementedProductServiceServer()
 }
 
-// UnimplementedProductsServer must be embedded to have forward compatible implementations.
-type UnimplementedProductsServer struct {
+// UnimplementedProductServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedProductServiceServer struct {
 }
 
-func (UnimplementedProductsServer) GetAllProducts(*QueryOptions, Products_GetAllProductsServer) error {
+func (UnimplementedProductServiceServer) GetAllProducts(*QueryOptions, ProductService_GetAllProductsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllProducts not implemented")
 }
-func (UnimplementedProductsServer) GetProductByID(context.Context, *ProductID) (*ProductResponse, error) {
+func (UnimplementedProductServiceServer) GetProductByID(context.Context, *ProductID) (*ProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProductByID not implemented")
 }
-func (UnimplementedProductsServer) CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error) {
+func (UnimplementedProductServiceServer) CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProduct not implemented")
 }
-func (UnimplementedProductsServer) UpdateProductByID(context.Context, *UpdateProductRequest) (*ProductResponse, error) {
+func (UnimplementedProductServiceServer) UpdateProductByID(context.Context, *UpdateProductRequest) (*ProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProductByID not implemented")
 }
-func (UnimplementedProductsServer) mustEmbedUnimplementedProductsServer() {}
+func (UnimplementedProductServiceServer) mustEmbedUnimplementedProductServiceServer() {}
 
-// UnsafeProductsServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ProductsServer will
+// UnsafeProductServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ProductServiceServer will
 // result in compilation errors.
-type UnsafeProductsServer interface {
-	mustEmbedUnimplementedProductsServer()
+type UnsafeProductServiceServer interface {
+	mustEmbedUnimplementedProductServiceServer()
 }
 
-func RegisterProductsServer(s grpc.ServiceRegistrar, srv ProductsServer) {
-	s.RegisterService(&Products_ServiceDesc, srv)
+func RegisterProductServiceServer(s grpc.ServiceRegistrar, srv ProductServiceServer) {
+	s.RegisterService(&ProductService_ServiceDesc, srv)
 }
 
-func _Products_GetAllProducts_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _ProductService_GetAllProducts_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(QueryOptions)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ProductsServer).GetAllProducts(m, &productsGetAllProductsServer{stream})
+	return srv.(ProductServiceServer).GetAllProducts(m, &productServiceGetAllProductsServer{stream})
 }
 
-type Products_GetAllProductsServer interface {
+type ProductService_GetAllProductsServer interface {
 	Send(*ProductResponse) error
 	grpc.ServerStream
 }
 
-type productsGetAllProductsServer struct {
+type productServiceGetAllProductsServer struct {
 	grpc.ServerStream
 }
 
-func (x *productsGetAllProductsServer) Send(m *ProductResponse) error {
+func (x *productServiceGetAllProductsServer) Send(m *ProductResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _Products_GetProductByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ProductService_GetProductByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ProductID)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductsServer).GetProductByID(ctx, in)
+		return srv.(ProductServiceServer).GetProductByID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/Products/GetProductByID",
+		FullMethod: "/ProductService/GetProductByID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductsServer).GetProductByID(ctx, req.(*ProductID))
+		return srv.(ProductServiceServer).GetProductByID(ctx, req.(*ProductID))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Products_CreateProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ProductService_CreateProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateProductRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductsServer).CreateProduct(ctx, in)
+		return srv.(ProductServiceServer).CreateProduct(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/Products/CreateProduct",
+		FullMethod: "/ProductService/CreateProduct",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductsServer).CreateProduct(ctx, req.(*CreateProductRequest))
+		return srv.(ProductServiceServer).CreateProduct(ctx, req.(*CreateProductRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Products_UpdateProductByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ProductService_UpdateProductByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateProductRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductsServer).UpdateProductByID(ctx, in)
+		return srv.(ProductServiceServer).UpdateProductByID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/Products/UpdateProductByID",
+		FullMethod: "/ProductService/UpdateProductByID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductsServer).UpdateProductByID(ctx, req.(*UpdateProductRequest))
+		return srv.(ProductServiceServer).UpdateProductByID(ctx, req.(*UpdateProductRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Products_ServiceDesc is the grpc.ServiceDesc for Products service.
+// ProductService_ServiceDesc is the grpc.ServiceDesc for ProductService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Products_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "Products",
-	HandlerType: (*ProductsServer)(nil),
+var ProductService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "ProductService",
+	HandlerType: (*ProductServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetProductByID",
-			Handler:    _Products_GetProductByID_Handler,
+			Handler:    _ProductService_GetProductByID_Handler,
 		},
 		{
 			MethodName: "CreateProduct",
-			Handler:    _Products_CreateProduct_Handler,
+			Handler:    _ProductService_CreateProduct_Handler,
 		},
 		{
 			MethodName: "UpdateProductByID",
-			Handler:    _Products_UpdateProductByID_Handler,
+			Handler:    _ProductService_UpdateProductByID_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "GetAllProducts",
-			Handler:       _Products_GetAllProducts_Handler,
+			Handler:       _ProductService_GetAllProducts_Handler,
 			ServerStreams: true,
 		},
 	},
