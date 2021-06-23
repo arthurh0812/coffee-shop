@@ -5,7 +5,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/arthurh0812/coffee-shop/protos"
+	pb "github.com/arthurh0812/coffee-shop/protos/products"
 
 	"github.com/arthurh0812/products/pkg/server"
 )
