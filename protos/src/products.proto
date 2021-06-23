@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option go_package = "github.com/arthurh0812/coffee-shop/protos/products";
+
+service Products {
+  rpc GetAllProducts(QueryOptions) returns (stream ProductResponse);
+  rpc GetProductByID(ProductID) returns (ProductResponse);
+  rpc CreateProduct(CreateProductRequest) returns (ProductResponse);
+  rpc UpdateProductByID(UpdateProductRequest) returns (ProductResponse);
+}
+
+message ProductID {
+  string id = 1;
+}
+
+message QueryOptions {
+  int32 results = 1;
+}
+
+message ProductResponse {
+  Product product = 1;
+}
+
+message Product {
+  string name = 1;
+  string description = 2;
+  float price = 3;
+  string sku = 4;
+}
+
+message CreateProductRequest {
+  string name = 1;
+  string sku = 2;
+  float price = 3;
+  string description = 4;
+
+}
+
+message UpdateProductRequest {
+  string id = 1;
+  string name = 2;
+  float price = 3;
+  string description = 4;
+}
